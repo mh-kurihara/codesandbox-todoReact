@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { InputTodo } from "./components/inputTodo";
+import { InputTodo } from "./components/InputTodo";
+import { IncompleteTodos } from "./components/IncompleteTodos";
+import { CompleteTodos } from "./components/CompleteTodos";
 import "./styles.css";
 
 export const App = () => {
@@ -55,41 +57,18 @@ export const App = () => {
         todoText={todoText}
         onChange={onChangeTodoText}
         onClick={onClickAdd}
+        disabled={incompleteTodos.length >= 5}
       />
-      <div className="incomplete-area">
-        <p>未完了のTODO</p>
-        <ul>
-          {/* 第二引数indexには０から順番に数値が入る */}
-          {incompleteTodos.map((todo, index) => {
-            return (
-              <li key={index}>
-                {/* keyは一意である必要がある */}
-                <div className="list-row">
-                  <p>{todo}</p>
-                  <button onClick={() => onClickComplete(index)}>完了</button>
-                  {/* onClickDlete(index)だけだと何もしなくても実行されてしまうのでアロー関数にする*/}
-                  <button onClick={() => onClickDelete(index)}>削除</button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      <div className="complete-area">
-        <p>完了のTODO</p>
-        <ul>
-          {completeTodos.map((todo, index) => {
-            return (
-              <li key={index}>
-                <div className="list-row">
-                  <p>{todo}</p>
-                  <button onClick={() => onClickBack(index)}>戻す</button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      {/* 配列が5個以上になったら＝TRUEなら　&&の右辺を出力 */}
+      {incompleteTodos.length >= 5 && (
+        <p style={{ color: "red" }}>登録できるTODOは5個までです！</p>
+      )}
+      <IncompleteTodos
+        todos={incompleteTodos}
+        onClickComplete={onClickComplete}
+        onClickDelete={onClickDelete}
+      />
+      <CompleteTodos todos={completeTodos} onClickBack={onClickBack} />
     </>
   );
 };
